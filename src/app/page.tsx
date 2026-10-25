@@ -110,11 +110,6 @@ export default function HomePage() {
               <PlusCircle className="w-4 h-4" />
               <span>Post A Listing</span>
             </Link>
-
-            <div className="hidden lg:flex items-center gap-2 ml-4 font-mono text-xs text-[#F9CC73]">
-              <span className="w-2 h-2 rounded-full bg-[#B5C995] animate-pulse"></span>
-              Live Supabase Sync
-            </div>
           </div>
         </div>
 

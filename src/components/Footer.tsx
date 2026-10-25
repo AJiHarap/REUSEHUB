@@ -48,20 +48,20 @@ export default function Footer() {
 
         <div>
           <h4 className="font-['Archivo_Black',sans-serif] text-sm text-[#F4ED36] uppercase mb-3">
-            Supabase Backend
+            Community
           </h4>
           <p className="font-mono text-xs text-[#F9F5F2]/80 leading-relaxed mb-3">
-            Powered by Supabase Auth, PostgreSQL, Realtime channels, and Storage buckets.
+            Connect directly with makers, carpenters, and circular builders across the country.
           </p>
-          <div className="bg-[#1A1A1A] border border-[#F4ED36] p-2.5 rounded-[6px] font-mono text-[11px] text-[#F9CC73]">
-            Database Status: <span className="text-[#B5C995] font-bold">Connected</span>
+          <div className="inline-block bg-[#1A1A1A] border border-[#F4ED36] px-3 py-1.5 rounded-[6px] font-mono text-[11px] text-[#F9CC73]">
+            🌱 Local Salvage Network
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto mt-8 pt-4 border-t border-[#8584BD] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#F9F5F2]/60">
         <p>© 2026 ReUseHub. All rights reserved.</p>
-        <p>Built with Next.js App Router & Supabase</p>
+        <p>Circular Economy Marketplace</p>
       </div>
     </footer>
   );
