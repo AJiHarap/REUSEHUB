@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-display), "Archivo Black", sans-serif;
+  --font-sans: var(--font-sans), "Inter", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+
+  --color-dusk-violet: #8584BD;
+  --color-hi-vis-yellow: #F4ED36;
+  --color-buttery-yellow: #F9CC73;
+  --color-lilac-shadow: #61609A;
+  --color-bubblegum-pink: #F8C1BA;
+  --color-matcha-cream: #B5C995;
+  --color-magenta-punch: #AC4F98;
+  --color-firecracker-red: #C94245;
+  --color-bone-white: #F9F5F2;
+  --color-ink-black: #1A1A1A;
+  --color-pure-black: #000000;
+}
+
+:root {
+  --background: #8584BD;
+  --foreground: #1A1A1A;
+}
+
+body {
+  background-color: #8584BD;
+  color: #1A1A1A;
+  font-family: var(--font-sans), sans-serif;
+  min-height: 100vh;
+}
+
+/* Flying Papers Neo-Brutalist & Risograph utility classes */
+.card-riso {
+  background-color: #F9F5F2;
+  border: 2px solid #1A1A1A;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0px #1A1A1A;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-riso:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #1A1A1A;
+}
+
+.card-riso-dark {
+  background-color: #61609A;
+  border: 2px solid #1A1A1A;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0px #1A1A1A;
+  color: #F9F5F2;
+}
+
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 2px solid #1A1A1A;
+  border-radius: 9999px;
+  padding: 0.6rem 1.4rem;
+  box-shadow: 2px 2px 0px #1A1A1A;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-pill:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #1A1A1A;
+}
+
+.btn-pill:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px #1A1A1A;
+}
+
+.btn-pill-yellow {
+  background-color: #F4ED36;
+  color: #000000;
+}
+.btn-pill-yellow:hover {
+  background-color: #fce83a;
+}
+
+.btn-pill-white {
+  background-color: #F9F5F2;
+  color: #000000;
+}
+
+.btn-pill-matcha {
+  background-color: #B5C995;
+  color: #1A1A1A;
+}
+
+.btn-pill-pink {
+  background-color: #F8C1BA;
+  color: #1A1A1A;
+}
+
+.btn-pill-red {
+  background-color: #C94245;
+  color: #F9F5F2;
+}
+
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.75rem;
+  border-radius: 9999px;
+  border: 1.5px solid #1A1A1A;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-new {
+  background-color: #B5C995;
+  color: #1A1A1A;
+}
+
+.badge-like_new {
+  background-color: #F4ED36;
+  color: #1A1A1A;
+}
+
+.badge-good {
+  background-color: #F9CC73;
+  color: #1A1A1A;
+}
+
+.badge-fair {
+  background-color: #F8C1BA;
+  color: #1A1A1A;
+}
+
+.badge-salvage {
+  background-color: #C94245;
+  color: #F9F5F2;
+}
+
+.input-riso {
+  background-color: #F9F5F2;
+  border: 2px solid #1A1A1A;
+  border-radius: 6px;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.95rem;
+  color: #1A1A1A;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-riso:focus {
+  border-color: #F4ED36;
+  box-shadow: 0 0 0 2px #1A1A1A;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #61609A;
+}
+::-webkit-scrollbar-thumb {
+  background: #F4ED36;
+  border: 2px solid #1A1A1A;
+  border-radius: 4px;
+}
