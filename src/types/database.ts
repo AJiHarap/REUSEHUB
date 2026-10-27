@@ -43,6 +43,7 @@ export interface Listing {
     full_name?: string | null;
     avatar_url?: string | null;
     seller_rating?: number | null;
+    total_sales?: number | null;
   } | null;
   is_favorited?: boolean;
 }

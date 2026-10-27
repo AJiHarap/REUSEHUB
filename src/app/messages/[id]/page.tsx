@@ -6,6 +6,7 @@ import { ArrowLeft, Send, Loader2, Package, Check, CheckCheck } from 'lucide-rea
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Message, Conversation, UserProfile } from '@/types/database';
+import { formatRupiah } from '@/lib/format';
 
 function ActiveConversationContent({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -197,7 +198,7 @@ function ActiveConversationContent({ params }: { params: Promise<{ id: string }>
             )}
             <div className="min-w-0">
               <p className="font-mono text-xs font-bold text-[#1A1A1A] truncate">{listing.title}</p>
-              <p className="font-['Archivo_Black',sans-serif] text-xs text-[#C94245]">${listing.price}</p>
+              <p className="font-['Archivo_Black',sans-serif] text-xs text-[#C94245]">{formatRupiah(listing.price)}</p>
             </div>
           </Link>
         )}

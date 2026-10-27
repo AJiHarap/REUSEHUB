@@ -18,6 +18,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Listing } from '@/types/database';
+import { formatRupiah } from '@/lib/format';
 
 export default function SellerDashboardPage() {
   const { user, profile, loading: authLoading } = useAuth();
@@ -181,8 +182,8 @@ export default function SellerDashboardPage() {
           <span className="font-mono text-[11px] font-bold text-[#61609A] uppercase block">
             Inventory Value
           </span>
-          <div className="font-['Archivo_Black',sans-serif] text-3xl text-[#1A1A1A] mt-1">
-            ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+          <div className="font-['Archivo_Black',sans-serif] text-2xl sm:text-3xl text-[#1A1A1A] mt-1">
+            {formatRupiah(totalValue)}
           </div>
         </div>
       </div>
@@ -226,7 +227,7 @@ export default function SellerDashboardPage() {
                         {item.title}
                       </Link>
                       <div className="flex flex-wrap items-center gap-2 mt-1 font-mono text-xs">
-                        <span className="font-bold text-[#1A1A1A]">${item.price}</span>
+                        <span className="font-bold text-[#1A1A1A]">{formatRupiah(item.price)}</span>
                         <span className="text-[#61609A]">({item.quantity} {item.unit || 'units'})</span>
                         <span className="text-[#61609A]">• {item.category}</span>
                         <span

@@ -130,8 +130,14 @@ export default function ProfilePage() {
           <div className="bg-[#61609A]/10 p-3 rounded-[6px] border border-[#1A1A1A]/20">
             <span className="text-[#61609A] block text-[10px] uppercase font-bold">Seller Rating</span>
             <span className="font-bold text-base text-[#1A1A1A] flex items-center justify-center gap-1 mt-0.5">
-              <Star className="w-4 h-4 fill-[#F4ED36] text-[#1A1A1A]" />
-              {profile?.seller_rating ? profile.seller_rating.toFixed(1) : '5.0'}
+              {profile?.total_sales && profile.total_sales > 0 && profile?.seller_rating ? (
+                <>
+                  <Star className="w-4 h-4 fill-[#F4ED36] text-[#1A1A1A]" />
+                  {profile.seller_rating.toFixed(1)}
+                </>
+              ) : (
+                <span className="text-xs text-[#61609A] font-bold">Belum Ada</span>
+              )}
             </span>
           </div>
 

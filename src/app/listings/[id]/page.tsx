@@ -22,6 +22,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { Listing, UserProfile } from '@/types/database';
 import { useAuth } from '@/context/AuthContext';
+import { formatRupiah } from '@/lib/format';
 
 const conditionLabels: Record<string, { label: string; class: string; desc: string }> = {
   new: { label: 'New / Unused Surplus', class: 'badge-new', desc: 'Brand new, never installed or used surplus material.' },
@@ -205,6 +206,23 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
 
     setSubmittingRequest(true);
     try {
+      // 1. Kurangi stok listing di database
+      const newQuantity = Math.max(0, listing.quantity - requestQty);
+      const isAvailable = newQuantity > 0;
+
+      const { error: stockError } = await supabase
+        .from('listings')
+        .update({
+          quantity: newQuantity,
+          is_available: isAvailable,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', listing.id);
+
+      if (stockError) {
+        throw new Error('Gagal memperbarui stok: ' + stockError.message);
+      }
+
       const { error } = await supabase.from('purchase_requests').insert({
         listing_id: listing.id,
         buyer_id: user.id,
@@ -215,8 +233,20 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
       });
 
       if (error) {
+        // Rollback stok jika error
+        await supabase
+          .from('listings')
+          .update({
+            quantity: listing.quantity,
+            is_available: listing.is_available,
+          })
+          .eq('id', listing.id);
+
         alert('Failed to send request: ' + error.message);
       } else {
+        setListing((prev) =>
+          prev ? { ...prev, quantity: newQuantity, is_available: isAvailable } : null
+        );
         setRequestSuccess(true);
         setTimeout(() => {
           setShowRequestModal(false);
@@ -390,6 +420,25 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
               {condition.desc}
             </p>
           </div>
+
+          {/* Dedicated Product Reviews Section */}
+          <div className="card-riso p-5 space-y-3">
+            <div className="flex items-center justify-between border-b-2 border-[#1A1A1A]/10 pb-2">
+              <h4 className="font-['Archivo_Black',sans-serif] text-sm text-[#1A1A1A] uppercase flex items-center gap-2">
+                <Star className="w-4 h-4 text-[#1A1A1A]" />
+                <span>Ulasan Produk (0)</span>
+              </h4>
+              <span className="font-mono text-xs text-[#61609A]">0 Ulasan</span>
+            </div>
+            <div className="py-4 text-center space-y-1">
+              <p className="font-mono text-xs font-bold text-[#1A1A1A]">
+                Belum ada ulasan untuk produk ini
+              </p>
+              <p className="font-mono text-[11px] text-[#61609A]">
+                Ulasan akan diberikan oleh pembeli setelah barang diterima dan pesanan diselesaikan.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Sidebar Info Column (5 cols) */}
@@ -402,7 +451,7 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
 
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="font-['Archivo_Black',sans-serif] text-3xl sm:text-4xl text-[#1A1A1A]">
-                  ${Number(listing.price).toLocaleString()}
+                  {formatRupiah(listing.price)}
                 </span>
                 <span className="font-mono text-sm text-[#61609A]">
                   per {listing.unit || 'piece'}
@@ -442,13 +491,19 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
             {/* Action Buttons */}
             {!isOwner ? (
               <div className="pt-4 border-t-2 border-[#1A1A1A] space-y-3">
-                <button
-                  onClick={() => setShowRequestModal(true)}
-                  className="w-full btn-pill btn-pill-yellow text-sm font-bold flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  <span>Send Purchase Request</span>
-                </button>
+                {listing.quantity <= 0 || !listing.is_available ? (
+                  <div className="p-3 bg-[#F8C1BA] border-2 border-[#1A1A1A] text-center rounded-[6px] font-mono text-xs font-bold text-[#C94245]">
+                    🚫 Stok Habis (Tidak Tersedia)
+                  </div>
+                ) : (
+                  <Link
+                    href={`/checkout/${listing.id}`}
+                    className="w-full btn-pill btn-pill-yellow text-sm font-bold flex items-center justify-center gap-2 shadow-[2px_2px_0px_#1A1A1A]"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>Beli Sekarang / Checkout</span>
+                  </Link>
+                )}
 
                 <button
                   onClick={handleStartChat}
@@ -501,13 +556,19 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
 
             <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#1A1A1A]/10 font-mono text-xs">
               <div className="flex items-center gap-1.5">
-                <Star className="w-4 h-4 fill-[#F4ED36] text-[#1A1A1A]" />
-                <span className="font-bold text-[#1A1A1A]">
-                  {sellerProfile?.seller_rating ? sellerProfile.seller_rating.toFixed(1) : 'New Seller'}
-                </span>
+                {sellerProfile?.total_sales && sellerProfile.total_sales > 0 && sellerProfile?.seller_rating ? (
+                  <>
+                    <Star className="w-4 h-4 fill-[#F4ED36] text-[#1A1A1A]" />
+                    <span className="font-bold text-[#1A1A1A]">
+                      {sellerProfile.seller_rating.toFixed(1)}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[#61609A]">Belum ada ulasan</span>
+                )}
               </div>
               <div className="text-right text-[#61609A]">
-                {sellerProfile?.total_sales || 0} sales completed
+                {sellerProfile?.total_sales || 0} penjualan selesai
               </div>
             </div>
           </div>
@@ -555,7 +616,7 @@ function ListingDetailContent({ params }: { params: Promise<{ id: string }> }) {
                 <div className="p-3 bg-[#F9CC73]/30 border border-[#1A1A1A] rounded-[4px] font-mono text-xs flex justify-between">
                   <span>Estimated Total:</span>
                   <span className="font-bold text-sm text-[#1A1A1A]">
-                    ${(requestQty * Number(listing.price)).toLocaleString()}
+                    {formatRupiah(requestQty * Number(listing.price))}
                   </span>
                 </div>
 

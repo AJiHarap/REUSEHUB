@@ -58,7 +58,8 @@ function SearchContent() {
               username,
               full_name,
               avatar_url,
-              seller_rating
+              seller_rating,
+              total_sales
             )
           `)
           .eq('is_available', true);
@@ -238,19 +239,19 @@ function SearchContent() {
           {/* Price Range */}
           <div>
             <h4 className="font-mono text-xs font-bold uppercase text-[#1A1A1A] mb-2">
-              Price Range ($)
+              Rentang Harga (Rp)
             </h4>
             <div className="grid grid-cols-2 gap-2">
               <input
                 type="number"
-                placeholder="Min"
+                placeholder="Min (Rp)"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 className="input-riso py-1 text-xs"
               />
               <input
                 type="number"
-                placeholder="Max"
+                placeholder="Max (Rp)"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 className="input-riso py-1 text-xs"

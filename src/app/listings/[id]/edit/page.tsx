@@ -254,11 +254,11 @@ function EditListingContent({ params }: { params: Promise<{ id: string }> }) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block font-mono text-xs font-bold uppercase text-[#1A1A1A] mb-1">
-                Price ($)
+                Harga (Rp)
               </label>
               <input
                 type="number"
-                step="0.01"
+                step="1000"
                 min="0"
                 required
                 value={price}

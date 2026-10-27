@@ -33,7 +33,8 @@ export default function FavoritesPage() {
                 username,
                 full_name,
                 avatar_url,
-                seller_rating
+                seller_rating,
+                total_sales
               )
             )
           `)

@@ -6,6 +6,7 @@ import { Heart, MapPin, Star, Eye } from 'lucide-react';
 import { Listing } from '@/types/database';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
+import { formatRupiah } from '@/lib/format';
 
 interface ListingCardProps {
   listing: Listing;
@@ -145,10 +146,10 @@ export default function ListingCard({
         <div className="mt-4 pt-3 border-t border-[#1A1A1A]/20 flex items-end justify-between">
           <div>
             <div className="font-mono text-[10px] uppercase text-[#61609A] font-bold">
-              Price
+              Harga
             </div>
             <div className="font-['Archivo_Black',sans-serif] text-lg text-[#1A1A1A]">
-              ${Number(listing.price).toLocaleString()}
+              {formatRupiah(listing.price)}
               {listing.unit && listing.unit !== 'piece' && (
                 <span className="font-mono text-xs text-[#61609A] font-normal">
                   /{listing.unit}
@@ -184,13 +185,13 @@ export default function ListingCard({
             </span>
           </div>
 
-          {listing.profiles?.seller_rating ? (
+          {listing.profiles?.total_sales && listing.profiles.total_sales > 0 && listing.profiles?.seller_rating ? (
             <div className="flex items-center gap-0.5 text-[#1A1A1A] font-bold">
               <Star className="w-3 h-3 fill-[#F4ED36] text-[#1A1A1A]" />
               <span>{listing.profiles.seller_rating.toFixed(1)}</span>
             </div>
           ) : (
-            <span className="text-[#61609A] text-[10px]">Active</span>
+            <span className="text-[#61609A] text-[10px]">Belum ada ulasan</span>
           )}
         </div>
       </div>

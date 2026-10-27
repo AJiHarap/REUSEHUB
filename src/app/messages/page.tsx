@@ -6,6 +6,7 @@ import { MessageSquare, Clock, ArrowRight, Loader2, User as UserIcon } from 'luc
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { Conversation, UserProfile } from '@/types/database';
+import { formatRupiah } from '@/lib/format';
 
 export default function MessagesListPage() {
   const { user, loading: authLoading } = useAuth();
@@ -149,7 +150,7 @@ export default function MessagesListPage() {
 
                     {listing && (
                       <p className="font-mono text-xs font-bold text-[#61609A] truncate">
-                        Re: {listing.title} (${listing.price})
+                        Re: {listing.title} ({formatRupiah(listing.price)})
                       </p>
                     )}
 

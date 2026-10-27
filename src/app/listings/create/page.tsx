@@ -350,14 +350,14 @@ export default function CreateListingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block font-mono text-xs font-bold uppercase text-[#1A1A1A] mb-1">
-                Price ($) *
+                Harga (Rp) *
               </label>
               <input
                 type="number"
-                step="0.01"
+                step="1000"
                 min="0"
                 required
-                placeholder="45.00"
+                placeholder="50000"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 className="input-riso font-mono font-bold"

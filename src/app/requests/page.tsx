@@ -10,11 +10,13 @@ import {
   Package, 
   Loader2, 
   ArrowRight,
-  MessageSquare
+  MessageSquare,
+  MapPin
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { PurchaseRequest, PurchaseRequestStatus } from '@/types/database';
+import { formatRupiah } from '@/lib/format';
 
 export default function PurchaseRequestsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -84,6 +86,29 @@ export default function PurchaseRequestsPage() {
   const updateStatus = async (requestId: string, nextStatus: PurchaseRequestStatus) => {
     setUpdatingId(requestId);
     try {
+      // Jika pesanan ditolak, kembalikan stok listing
+      if (nextStatus === 'declined') {
+        const targetReq = requests.find((r) => r.id === requestId);
+        if (targetReq && targetReq.listing_id && targetReq.quantity) {
+          const { data: currentListing } = await supabase
+            .from('listings')
+            .select('quantity')
+            .eq('id', targetReq.listing_id)
+            .single();
+
+          if (currentListing) {
+            await supabase
+              .from('listings')
+              .update({
+                quantity: currentListing.quantity + targetReq.quantity,
+                is_available: true,
+                updated_at: new Date().toISOString(),
+              })
+              .eq('id', targetReq.listing_id);
+          }
+        }
+      }
+
       const { error } = await supabase
         .from('purchase_requests')
         .update({
@@ -235,14 +260,14 @@ export default function PurchaseRequestsPage() {
                   </div>
 
                   <div className="bg-[#61609A]/10 p-2.5 rounded-[4px] border border-[#1A1A1A]/20">
-                    <span className="text-[#61609A] block text-[10px] uppercase font-bold">Total Offer</span>
+                    <span className="text-[#61609A] block text-[10px] uppercase font-bold">Total Harga</span>
                     <span className="font-bold text-[#1A1A1A] text-sm">
-                      ${totalPrice.toLocaleString()}
+                      {formatRupiah(totalPrice)}
                     </span>
                   </div>
 
                   <div className="bg-[#61609A]/10 p-2.5 rounded-[4px] border border-[#1A1A1A]/20">
-                    <span className="text-[#61609A] block text-[10px] uppercase font-bold">Requested On</span>
+                    <span className="text-[#61609A] block text-[10px] uppercase font-bold">Tanggal Pesan</span>
                     <span className="font-bold text-[#1A1A1A]">
                       {new Date(req.created_at).toLocaleDateString()}
                     </span>
@@ -250,12 +275,13 @@ export default function PurchaseRequestsPage() {
                 </div>
 
                 {req.message && (
-                  <div className="p-3 bg-[#F9F5F2] border border-[#1A1A1A] rounded-[4px]">
-                    <span className="block font-mono text-[10px] font-bold text-[#61609A] uppercase mb-0.5">
-                      Buyer Note
-                    </span>
-                    <p className="font-sans text-xs text-[#1A1A1A] italic">
-                      &ldquo;{req.message}&rdquo;
+                  <div className="p-3.5 bg-[#F9F5F2] border-2 border-[#1A1A1A] rounded-[6px] space-y-1">
+                    <div className="flex items-center gap-1.5 font-mono text-[11px] font-bold text-[#1A1A1A] uppercase border-b border-[#1A1A1A]/10 pb-1">
+                      <MapPin className="w-3.5 h-3.5 text-[#C94245]" />
+                      <span>Detail Pengiriman & Catatan Pembeli</span>
+                    </div>
+                    <p className="font-mono text-xs text-[#1A1A1A] whitespace-pre-wrap leading-relaxed pt-1">
+                      {req.message}
                     </p>
                   </div>
                 )}
